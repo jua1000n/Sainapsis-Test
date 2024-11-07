@@ -1,5 +1,14 @@
+import { Order } from "@/types/Order";
 import { create } from "zustand";
 
-const useStore = create((set) => ({}));
+type Store = {
+  orders: Order[]; // Lista de órdenes
+  addOrder: (order: Order) => void; // Función para actualizar las órdenes
+};
+
+const useStore = create<Store>((set) => ({
+  orders: [],
+  addOrder: (order) => set((state) => ({ orders: [...state.orders, order] })),
+}));
 
 export default useStore;
