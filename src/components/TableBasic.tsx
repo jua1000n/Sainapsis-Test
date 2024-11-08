@@ -14,6 +14,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { ProductDetail } from "@/types/ProductDetail";
+import { ScrollArea } from "./ui/scroll-area";
 
 interface TableBasicProps {
   columns: ColumnDef<ProductDetail>[];
@@ -28,7 +29,7 @@ export const TableBasic: React.FC<TableBasicProps> = ({ columns, data }) => {
   });
 
   return (
-    <div className="rounded-md border">
+    <ScrollArea className="h-56 rounded-md border">
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
@@ -71,6 +72,6 @@ export const TableBasic: React.FC<TableBasicProps> = ({ columns, data }) => {
           )}
         </TableBody>
       </Table>
-    </div>
+    </ScrollArea>
   );
 };
