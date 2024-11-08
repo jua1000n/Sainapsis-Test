@@ -13,33 +13,33 @@ import useStore from "@/store/useStore";
 import { Order } from "@/types/Order";
 import { v4 as uuidv4 } from "uuid";
 import { OrderState } from "@/types/OrderState";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "./ui/dialog";
+import { OrderStatusHistory } from "@/types/OrderStatusHistory";
 
 const formNewOrder = z.object({
-  idCustomer: z.string().regex(/^\d+$/),
   amount: z.string().regex(/^\d+$/),
-  firstName: z.string().min(1),
-  lastName: z.string(),
+  name: z.string().min(1),
   email: z.string().regex(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/),
-  address: z.string(),
-  city: z.string(),
-  country: z.string(),
   note: z.string(),
 });
 
 export const FormNewOrder = () => {
-  const { addOrder, orders } = useStore();
+  const { addOrder, addOrderStatusHistory } = useStore();
+
+  const [stateDialog, setStateDialog] = useState(false);
 
   const form = useForm<z.infer<typeof formNewOrder>>({
     resolver: zodResolver(formNewOrder),
     defaultValues: {
-      idCustomer: "",
       amount: "",
-      firstName: "",
-      lastName: "",
+      name: "",
       email: "",
-      address: "",
-      city: "",
-      country: "",
       note: "",
     },
   });
@@ -48,167 +48,120 @@ export const FormNewOrder = () => {
     []
   );
 
-  const { control, handleSubmit } = form;
+  const { control, handleSubmit, reset } = form;
 
   const onHandleSubumitCreateOrder = (values: z.infer<typeof formNewOrder>) => {
     const newUUID = uuidv4();
+    const date = new Date();
 
     const newOrder: Order = {
       id: newUUID,
       amount: Number(values.amount),
       currentState: OrderState.Pending,
-      creationDate: new Date(),
+      creationDate: date,
       customer: {
-        id: Number(values.idCustomer),
-        firstName: values.firstName,
-        lastName: values.lastName,
+        name: values.name,
         email: values.email,
-        address: values.address,
-        city: values.city,
-        country: values.country,
       },
       productDetails: listProductDetails,
       notes: values.note,
     };
+
+    const newOrderStatusHistory: OrderStatusHistory = {
+      orderId: newUUID,
+      previewState: null,
+      currentState: OrderState.Pending,
+      date: date,
+    };
+
+    reset();
     addOrder(newOrder);
+    addOrderStatusHistory(newOrderStatusHistory);
+    setListProductDetails([]);
+    setStateDialog(false);
   };
 
   return (
-    <div className="flex gap-5">
-      <Card>
-        <Form {...form}>
-          <form onSubmit={handleSubmit(onHandleSubumitCreateOrder)}>
-            <CardContent className="grid grid-cols-4 gap-5">
-              <FormField
-                control={control}
-                name="idCustomer"
-                rules={{ required: true }}
-                render={({ field }) => (
-                  <FormItem className="text-left">
-                    <FormLabel>Identification number</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={control}
-                name="firstName"
-                rules={{ required: true, minLength: 1 }}
-                render={({ field }) => (
-                  <FormItem className="text-left">
-                    <FormLabel>First Name</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={control}
-                name="lastName"
-                rules={{ required: true, minLength: 1 }}
-                render={({ field }) => (
-                  <FormItem className="text-left">
-                    <FormLabel>Last Name</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={control}
-                name="email"
-                rules={{ required: true }}
-                render={({ field }) => (
-                  <FormItem className="text-left">
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input type="email" {...field} />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={control}
-                name="address"
-                rules={{ required: true, minLength: 1 }}
-                render={({ field }) => (
-                  <FormItem className="text-left">
-                    <FormLabel>Address</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={control}
-                name="city"
-                rules={{ required: true, minLength: 1 }}
-                render={({ field }) => (
-                  <FormItem className="text-left">
-                    <FormLabel>City</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={control}
-                name="country"
-                rules={{ required: true, minLength: 1 }}
-                render={({ field }) => (
-                  <FormItem className="text-left">
-                    <FormLabel>Country</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={control}
-                rules={{ required: true }}
-                name="amount"
-                render={({ field }) => (
-                  <FormItem className="text-left">
-                    <FormLabel>Amount</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={control}
-                name="note"
-                render={({ field }) => (
-                  <FormItem className="text-left col-span-4">
-                    <FormLabel>Notes</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder="Add notes about your order"
-                        {...field}
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-            </CardContent>
-            <CardFooter>
-              <Button type="submit">Submit</Button>
-            </CardFooter>
-          </form>
-        </Form>
-      </Card>
-      <FormNewProduct
-        listProductDetails={listProductDetails}
-        setListProductDetails={setListProductDetails}
-      />
-    </div>
+    <Dialog open={stateDialog} onOpenChange={setStateDialog}>
+      <DialogTrigger asChild>
+        <Button>Create New Order</Button>
+      </DialogTrigger>
+      <DialogContent className="max-w-[1400px]">
+        <DialogHeader>
+          <DialogTitle>Create a new order</DialogTitle>
+        </DialogHeader>
+        <div className="flex gap-5">
+          <Card>
+            <Form {...form}>
+              <form onSubmit={handleSubmit(onHandleSubumitCreateOrder)}>
+                <CardContent className="grid grid-cols-4 gap-5">
+                  <FormField
+                    control={control}
+                    name="name"
+                    rules={{ required: true, minLength: 1 }}
+                    render={({ field }) => (
+                      <FormItem className="text-left">
+                        <FormLabel>Name</FormLabel>
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={control}
+                    name="email"
+                    rules={{ required: true }}
+                    render={({ field }) => (
+                      <FormItem className="text-left">
+                        <FormLabel>Email</FormLabel>
+                        <FormControl>
+                          <Input type="email" {...field} />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={control}
+                    rules={{ required: true }}
+                    name="amount"
+                    render={({ field }) => (
+                      <FormItem className="text-left">
+                        <FormLabel>Amount</FormLabel>
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={control}
+                    name="note"
+                    render={({ field }) => (
+                      <FormItem className="text-left col-span-4">
+                        <FormLabel>Notes</FormLabel>
+                        <FormControl>
+                          <Textarea
+                            placeholder="Add notes about your order"
+                            {...field}
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                </CardContent>
+                <CardFooter>
+                  <Button type="submit">Submit</Button>
+                </CardFooter>
+              </form>
+            </Form>
+          </Card>
+          <FormNewProduct
+            listProductDetails={listProductDetails}
+            setListProductDetails={setListProductDetails}
+          />
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 };
