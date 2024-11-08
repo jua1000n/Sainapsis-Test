@@ -1,4 +1,37 @@
-# React + TypeScript + Vite
+# Sainapsis Frontend Developer Test – Console Admind
+
+This project is a React application that uses Yarn as the package manager.
+
+## Requirements
+
+Make sure you have the following tools installed on your machine:
+
+- [Node.js](https://nodejs.org/) (recommended version: >= 20.17.0)
+- [Yarn](https://yarnpkg.com/) (recommended version: >= 1.22.x)
+
+## Installation
+
+1. **Clone the repository:**
+
+   ```bash
+   git clone https://github.com/jua1000n/Sainapsis-Test.git
+
+2. Once you have cloned the repository and validated that the basic resources are installed, run the following command:
+
+    ```bash
+    yarn
+
+3. This will download the necessary packages for the app. Now, to run the application, you must execute the following command:
+
+    ```bash
+    yarn dev
+
+### If you want to run this in production
+You need to ensure that you have a server to run it. To do this, you must run the command 
+
+    yarn build
+
+which will create base files. These files will be found in the dist folder. You must then serve them on a server, for example, using Nginx. Keep in mind that special configuration is required to correctly handle the routes, as react-router-dom is used.
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
