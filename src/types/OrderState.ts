@@ -4,4 +4,5 @@ export enum OrderState {
   InPreparation = "In Preparation",
   Shipped = "Shipped",
   Delivered = "Delivered",
+  Canceled = "Canceled",
 }
