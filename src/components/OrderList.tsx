@@ -6,7 +6,8 @@ import { useOrder } from "@/utils/hooks/useOrder";
 
 export const OrderList = () => {
   const { orders } = useOrder();
-  const [pageSize, setPageSize] = useState(9);
+  // const [pageSize, setPageSize] = useState(9);
+  const pageSize = 9;
   const [currentPage, setCurrentPage] = useState(0);
 
   const [listOrders, setListOrders] = useState<Order[]>([]);
