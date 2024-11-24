@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
@@ -62,7 +62,8 @@ export const columns: ColumnDef<OrderStatusHistory>[] = [
 ];
 
 export const TransitionLog = () => {
-  const { orderStatusHistory } = useOrderStatusHistory();
+  const { orderStatusHistory, updateOrderStatusHistory } =
+    useOrderStatusHistory();
 
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -80,7 +81,9 @@ export const TransitionLog = () => {
     },
   });
 
-  console.log(columnFilters);
+  useEffect(() => {
+    updateOrderStatusHistory();
+  }, []);
 
   return (
     <Card>
