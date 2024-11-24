@@ -1,12 +1,14 @@
-import useStore from "@/store/useStore";
-import { OrderStatusHistory } from "@/types/OrderStatusHistory";
+import { useContext } from "react";
+import {
+  OrderStatusHistoryContext,
+  OrderStatusHistoryContextType,
+} from "@/contexts/OrderStatusHistoryContext";
 
-export const useOrderStatusHistory = (orderId: string | null = null) => {
-  const orderStatusHistory = useStore((state) => state.orderStatusHistory);
+export const useOrderStatusHistory = (): OrderStatusHistoryContextType => {
+  const context = useContext(OrderStatusHistoryContext);
+  if (!context) {
+    throw new Error("useHistorial must be used within a HistorialProvider");
+  }
 
-  const listOrderStatusHistory = orderStatusHistory
-    .filter((history: OrderStatusHistory) => history.orderId === orderId)
-    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-
-  return { listOrderStatusHistory, orderStatusHistory };
+  return context;
 };
