@@ -3,9 +3,10 @@ import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import { Order } from "@/types/Order";
 import { useOrder } from "@/utils/hooks/useOrder";
+import { OrderState } from "@/types/OrderState";
 
 export const OrderList = () => {
-  const { orders } = useOrder();
+  const { orders, updateOrderState } = useOrder();
   // const [pageSize, setPageSize] = useState(9);
   const pageSize = 9;
   const [currentPage, setCurrentPage] = useState(0);
@@ -25,11 +26,18 @@ export const OrderList = () => {
     }
   };
 
+  const handleChangeOrderState = async (
+    orderId: string,
+    newState: OrderState
+  ) => {
+    updateOrderState(orderId, newState);
+  };
+
   return (
     <div>
       <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-10 justify-between">
         {listOrders.map((order) => (
-          <OrderCard order={order} />
+          <OrderCard order={order} onChangeState={handleChangeOrderState} />
         ))}
       </div>
       <div className="w-full flex gap-5 mt-10 justify-end">

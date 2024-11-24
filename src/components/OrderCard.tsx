@@ -2,11 +2,17 @@ import React from "react";
 import { Card, CardContent, CardFooter, CardHeader } from "./ui/card";
 import { Order } from "@/types/Order";
 import { StateControl } from "./StateControl";
-import useStore from "@/store/useStore";
+import { OrderState } from "@/types/OrderState";
 
-export const OrderCard: React.FC<{ order: Order }> = ({ order }) => {
-  const { updateOrderState, addOrderStatusHistory } = useStore();
+interface OrderCardProps {
+  order: Order;
+  onChangeState: (orderId: string, newState: OrderState) => void;
+}
 
+export const OrderCard: React.FC<OrderCardProps> = ({
+  order,
+  onChangeState,
+}) => {
   return (
     <Card className="text-left min-w-72 max-w-96">
       <CardHeader>
@@ -40,11 +46,7 @@ export const OrderCard: React.FC<{ order: Order }> = ({ order }) => {
         </div>
       </CardContent>
       <CardFooter className="flex justify-between">
-        <StateControl
-          order={order}
-          updateOrderState={updateOrderState}
-          addOrderStatusHistory={addOrderStatusHistory}
-        />
+        <StateControl order={order} updateOrderState={onChangeState} />
       </CardFooter>
     </Card>
   );
