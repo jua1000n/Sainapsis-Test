@@ -3,13 +3,11 @@ import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Button } from "./ui/button";
 import { Order } from "@/types/Order";
 import { OrderState } from "@/types/OrderState";
-import { OrderStatusHistory } from "@/types/OrderStatusHistory";
 
 export const StateControl: React.FC<{
   order: Order;
   updateOrderState: (id: string, newState: OrderState) => void;
-  addOrderStatusHistory: (orderStatusHistory: OrderStatusHistory) => void;
-}> = ({ order, updateOrderState, addOrderStatusHistory }) => {
+}> = ({ order, updateOrderState }) => {
   const [statePopover, setStatePopover] = useState(false);
 
   const valueToReview = 1000;
@@ -51,15 +49,6 @@ export const StateControl: React.FC<{
 
     if (targetState) {
       updateOrderState(order.id, targetState);
-      const date = new Date();
-
-      const newOrderStatusHistory: OrderStatusHistory = {
-        orderId: order.id,
-        previewState: currentState,
-        currentState: targetState,
-        date: date,
-      };
-      addOrderStatusHistory(newOrderStatusHistory);
     }
   };
 
