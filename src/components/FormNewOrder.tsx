@@ -9,7 +9,6 @@ import { Textarea } from "./ui/textarea";
 import { FormNewProduct } from "./FormNewProduct";
 import { ProductDetail } from "@/types/ProductDetail";
 import { useState } from "react";
-import useStore from "@/store/useStore";
 import { Order } from "@/types/Order";
 import { v4 as uuidv4 } from "uuid";
 import { OrderState } from "@/types/OrderState";
@@ -20,7 +19,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "./ui/dialog";
-import { OrderStatusHistory } from "@/types/OrderStatusHistory";
+import { useCreateOrder } from "@/utils/hooks/useCreateOrder ";
 
 const formNewOrder = z.object({
   amount: z.string().regex(/^\d+$/),
@@ -30,7 +29,7 @@ const formNewOrder = z.object({
 });
 
 export const FormNewOrder = () => {
-  const { addOrder, addOrderStatusHistory } = useStore();
+  const { createOrder } = useCreateOrder();
 
   const [stateDialog, setStateDialog] = useState(false);
 
@@ -67,16 +66,8 @@ export const FormNewOrder = () => {
       notes: values.note,
     };
 
-    const newOrderStatusHistory: OrderStatusHistory = {
-      orderId: newUUID,
-      previewState: null,
-      currentState: OrderState.Pending,
-      date: date,
-    };
-
     reset();
-    addOrder(newOrder);
-    addOrderStatusHistory(newOrderStatusHistory);
+    createOrder(newOrder);
     setListProductDetails([]);
     setStateDialog(false);
   };
