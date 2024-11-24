@@ -16,18 +16,26 @@ Make sure you have the following tools installed on your machine:
    ```bash
    git clone https://github.com/jua1000n/Sainapsis-Test.git
 
+   ```
+
 2. Once you have cloned the repository and validated that the basic resources are installed, run the following command:
 
-    ```bash
-    yarn
+   ```bash
+   yarn
+
+   ```
 
 3. This will download the necessary packages for the app. Now, to run the application, you must execute the following command:
 
-    ```bash
-    yarn dev
+   ```bash
+   yarn dev
+   ```
+
+For the application to work correctly, the backend must be running. If it's hosted on a server, you need to know the IP address and the port where it has been configured or a domain. In this case, you must create an .env file, and the variable name should be API_BASE_URL. If you want to check the URL configuration before building, it can be found in src/utils/config.ts.
 
 ### If you want to run this in production
-You need to ensure that you have a server to run it. To do this, you must run the command 
+
+You need to ensure that you have a server to run it. To do this, you must run the command
 
     yarn build
 
@@ -51,11 +59,11 @@ export default tseslint.config({
   languageOptions: {
     // other options...
     parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
+      project: ["./tsconfig.node.json", "./tsconfig.app.json"],
       tsconfigRootDir: import.meta.dirname,
     },
   },
-})
+});
 ```
 
 - Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
@@ -64,11 +72,11 @@ export default tseslint.config({
 
 ```js
 // eslint.config.js
-import react from 'eslint-plugin-react'
+import react from "eslint-plugin-react";
 
 export default tseslint.config({
   // Set the react version
-  settings: { react: { version: '18.3' } },
+  settings: { react: { version: "18.3" } },
   plugins: {
     // Add the react plugin
     react,
@@ -77,7 +85,7 @@ export default tseslint.config({
     // other rules...
     // Enable its recommended rules
     ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
+    ...react.configs["jsx-runtime"].rules,
   },
-})
+});
 ```
