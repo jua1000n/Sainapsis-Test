@@ -37,7 +37,7 @@ export const OrderStatusHistoryProvider: React.FC<
       }
 
       const data = await response.json();
-      setOrderStatusHistory(data);
+      setOrderStatusHistory(data.reverse());
     } catch (err: any) {
       setError(err.message);
     } finally {

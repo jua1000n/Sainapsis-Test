@@ -43,7 +43,7 @@ export const useOrder = () => {
         }
 
         const data = await response.json();
-        setOrders(data);
+        setOrders(data.reverse());
       } catch (err: any) {
         setError(err.message);
       } finally {
