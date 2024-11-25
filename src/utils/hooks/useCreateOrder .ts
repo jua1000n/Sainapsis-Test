@@ -1,10 +1,13 @@
 import { useState } from "react";
 import { API_BASE_URL } from "../config";
 import { Order } from "@/types/Order";
+import { useOrderStatusHistory } from "./useOrderStatusHistory";
 
 export const useCreateOrder = () => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+
+  const { updateOrderStatusHistory } = useOrderStatusHistory();
 
   const createOrder = async (order: Order) => {
     setError(null);
@@ -23,6 +26,7 @@ export const useCreateOrder = () => {
       }
 
       const data: Order = await response.json();
+      updateOrderStatusHistory();
       return data;
     } catch (err: any) {
       setError(err.message);
